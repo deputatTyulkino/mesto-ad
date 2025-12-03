@@ -5,6 +5,18 @@ const handleEscUp = (evt) => {
   }
 };
 
+export const fetchingButtonState = (button, text) => {
+  button.textContent = text;
+  button.disabled = true;
+  button.style.opacity = "0.7";
+};
+
+export const resetButtonState = (button, text) => {
+  button.textContent = text;
+  button.disabled = false;
+  button.style.opacity = "1";
+};
+
 export const openModalWindow = (modalWindow) => {
   modalWindow.classList.add("popup_is-opened");
   document.body.style.overflow = "hidden";
