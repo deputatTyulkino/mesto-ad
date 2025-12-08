@@ -23,7 +23,6 @@ import {
 } from "./components/modal.js";
 import { setIdOwner } from "./components/storage.js";
 import { enableValidation, clearValidation } from "./components/validation.js";
-import { getTemplateUserCardInfo } from "./components/template.js";
 import {
   createDescriptionValues,
   appendInfoString,
