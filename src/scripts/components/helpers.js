@@ -5,7 +5,7 @@ export const formatDate = (date) => new Date(date).toLocaleDateString();
 export const getCountLike = (data) => data.length;
 
 export const appendInfoString = (list, terms, descriptions) => {
-  console.log(list);
+  const listParent = list.parentNode;
   Object.entries(terms).forEach(([keyTerm, valueTerm]) => {
     list.append(createInfoString(valueTerm, descriptions[keyTerm]));
   });

@@ -85,6 +85,9 @@ const confirmModalWindow = document.querySelector(".popup_type_remove-card");
 export const confirmButton = confirmModalWindow.querySelector(".popup__button");
 
 const cardInfoModalWindow = document.querySelector(".popup_type_info");
+const cardInfoWrapper = cardInfoModalWindow.querySelector(
+  ".popup__content_content_info",
+);
 const titleInfo = cardInfoModalWindow.querySelector(".popup__title");
 const listInfo = cardInfoModalWindow.querySelector(".popup__info");
 const subtitleInfo = cardInfoModalWindow.querySelector(".popup__text");
