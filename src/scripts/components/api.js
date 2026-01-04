@@ -10,58 +10,65 @@ const getResponseData = (res) => {
   return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
 };
 
-export const getUserInfo = () => {
-  return fetch(`${config.baseUrl}/users/me`, {
+export const getUserInfo = async () => {
+  const res = await fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
-  }).then(getResponseData);
+  });
+  return getResponseData(res);
 };
 
-export const getCardList = () => {
-  return fetch(`${config.baseUrl}/cards`, {
+export const getCardList = async () => {
+  const res = await fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
-  }).then(getResponseData);
+  });
+  return getResponseData(res);
 };
 
-export const setUserInfo = ({ name, about }) => {
-  return fetch(`${config.baseUrl}/users/me`, {
+export const setUserInfo = async ({ name, about }) => {
+  const res = await fetch(`${config.baseUrl}/users/me`, {
     method: "PATCH",
     headers: config.headers,
     body: JSON.stringify({
       name,
       about,
     }),
-  }).then(getResponseData);
+  });
+  return getResponseData(res);
 };
 
-export const setAvatar = ({ avatar }) => {
-  return fetch(`${config.baseUrl}/users/me`, {
+export const setAvatar = async ({ avatar }) => {
+  const res = await fetch(`${config.baseUrl}/users/me`, {
     method: "PATCH",
     headers: config.headers,
     body: JSON.stringify({ avatar }),
-  }).then(getResponseData);
+  });
+  return getResponseData(res);
 };
 
-export const addCard = ({ name, link }) => {
-  return fetch(`${config.baseUrl}/cards`, {
+export const addCard = async ({ name, link }) => {
+  const res = await fetch(`${config.baseUrl}/cards`, {
     method: "POST",
     headers: config.headers,
     body: JSON.stringify({
       name,
       link,
     }),
-  }).then(getResponseData);
+  });
+  return getResponseData(res);
 };
 
-export const deleteCard = (id) => {
-  return fetch(`${config.baseUrl}/cards/${id}`, {
+export const deleteCard = async (id) => {
+  const res = await fetch(`${config.baseUrl}/cards/${id}`, {
     method: "DELETE",
     headers: config.headers,
-  }).then(getResponseData);
+  });
+  return getResponseData(res);
 };
 
-export const changeLikeCardStatus = (cardID, isLiked) => {
-  return fetch(`${config.baseUrl}/cards/likes/${cardID}`, {
+export const changeLikeCardStatus = async (cardID, isLiked) => {
+  const res = await fetch(`${config.baseUrl}/cards/likes/${cardID}`, {
     method: isLiked ? "PUT" : "DELETE",
     headers: config.headers,
-  }).then((res) => getResponseData(res));
+  });
+  return getResponseData(res);
 };
