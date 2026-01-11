@@ -12,7 +12,7 @@ import {
   setUserInfo,
   setAvatar,
   addCard,
-} from "./components/api.js";
+} from "./api/api.js";
 import { createCardElement, removeCard } from "./components/card.js";
 import {
   openModalWindow,
@@ -27,15 +27,12 @@ import {
   createDescriptionValues,
   appendInfoString,
   appendUserLikes,
-} from "./components/helpers.js";
-import {
-  INFO_CARD_TERMS as terms,
-  FETCH_BUTTON_SAVE_TEXT,
-  BUTTON_CREATE_TEXT,
-  BUTTON_SAVE_TEXT,
-  FETCH_BUTTON_CREATE_TEXT,
-  INF_ABOUT_CARD,
-} from "./components/constants.js";
+} from "./helpers/helpers.js";
+import { ButtonText } from "./constants/button_text.js";
+
+import { CardInfo } from "./constants/card_info.js";
+
+import { isAxiosError } from "axios";
 
 // Создание объекта с настройками валидации
 const validationSettings = {
@@ -98,8 +95,9 @@ const showInfoCard = (cardId) => {
     .then((cards) => {
       const currentCard = cards.find((card) => card["_id"] === cardId);
       const descriptions = createDescriptionValues(currentCard);
-      titleInfo.textContent = INF_ABOUT_CARD.title;
-      subtitleInfo.textContent = INF_ABOUT_CARD.subtitle;
+      const terms = CardInfo.INFO_CARD_TERMS;
+      titleInfo.textContent = CardInfo.TITLE_INFO_CARD.title;
+      subtitleInfo.textContent = CardInfo.TITLE_INFO_CARD.subtitle;
       appendInfoString(listInfo, terms, descriptions);
       appendUserLikes(userLikesList, currentCard.likes);
       openModalWindow(cardInfoModalWindow);
@@ -127,7 +125,7 @@ const handlePreviewPicture = ({ name, link }) => {
 
 const handleProfileFormSubmit = (evt) => {
   evt.preventDefault();
-  fetchingButtonState(profileEditButton, FETCH_BUTTON_SAVE_TEXT);
+  fetchingButtonState(profileEditButton, ButtonText.FETCH_BUTTON_SAVE_TEXT);
   setUserInfo({
     name: evt.target["user-name"].value,
     about: evt.target["user-description"].value,
@@ -141,15 +139,15 @@ const handleProfileFormSubmit = (evt) => {
       console.log(err);
     })
     .finally(() => {
-      resetButtonState(profileEditButton, BUTTON_SAVE_TEXT);
+      resetButtonState(profileEditButton, ButtonText.BUTTON_SAVE_TEXT);
     });
 };
 
 const handleAvatarFromSubmit = (evt) => {
   evt.preventDefault();
   const avatarUrl = evt.target["user-avatar"].value.trim();
-  fetchingButtonState(editAvatarButton, FETCH_BUTTON_SAVE_TEXT);
-  setAvatar({ avatarUrl })
+  fetchingButtonState(editAvatarButton, ButtonText.FETCH_BUTTON_SAVE_TEXT);
+  setAvatar(avatarUrl)
     .then((userData) => {
       profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
       closeModalWindow(avatarFormModalWindow);
@@ -158,7 +156,7 @@ const handleAvatarFromSubmit = (evt) => {
       console.log(err);
     })
     .finally(() => {
-      resetButtonState(editAvatarButton, BUTTON_SAVE_TEXT);
+      resetButtonState(editAvatarButton, ButtonText.BUTTON_SAVE_TEXT);
     });
 };
 
@@ -166,7 +164,7 @@ const handleCardFormSubmit = (evt) => {
   evt.preventDefault();
   const name = evt.target["place-name"].value.trim();
   const link = evt.target["place-link"].value.trim();
-  fetchingButtonState(cardButton, FETCH_BUTTON_CREATE_TEXT);
+  fetchingButtonState(cardButton, ButtonText.FETCH_BUTTON_CREATE_TEXT);
   addCard({ name, link })
     .then((card) => {
       placesWrap.prepend(
@@ -181,7 +179,7 @@ const handleCardFormSubmit = (evt) => {
       console.log(err);
     })
     .finally(() => {
-      resetButtonState(cardButton, BUTTON_CREATE_TEXT);
+      resetButtonState(cardButton, ButtonText.BUTTON_CREATE_TEXT);
     });
 };
 
@@ -239,5 +237,7 @@ Promise.all([getCardList(), getUserInfo()])
     setProfile(userData);
   })
   .catch((err) => {
-    console.log(err);
+    if (isAxiosError(err)) {
+      console.log(err.message)
+    };
   });

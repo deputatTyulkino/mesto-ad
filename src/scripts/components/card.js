@@ -1,9 +1,10 @@
-import { changeLikeCardStatus, deleteCard } from "./api";
+import { changeLikeCardStatus, deleteCard } from "../api/api";
 import { confirmButton, openConfirmModalWindow } from "../index";
 import { getIdOwner } from "./storage";
 import { fetchingButtonState, resetButtonState } from "./modal";
 import { getTemplate } from "./template";
-import { getCountLike } from "./helpers";
+import { getCountLike } from "../helpers/helpers";
+import { ButtonText } from "../constants/button_text";
 
 const likeCard = (likeButton, id) => {
   likeButton.classList.toggle("card__like-button_is-active");
@@ -12,7 +13,7 @@ const likeCard = (likeButton, id) => {
 };
 
 export const removeCard = (id, cardElement) => {
-  fetchingButtonState(confirmButton, "Удаление...");
+  fetchingButtonState(confirmButton, ButtonText.FETCH_BUTTON_REMOVE_TEXT);
   deleteCard(id)
     .then((response) => {
       cardElement.remove();
@@ -22,7 +23,7 @@ export const removeCard = (id, cardElement) => {
       console.log(err);
     })
     .finally(() => {
-      resetButtonState(confirmButton, "Да");
+      resetButtonState(confirmButton, ButtonText.CONFIRM_BUTTON_TEXT);
     });
 };
 
