@@ -21,8 +21,8 @@ import {
   fetchingButtonState,
   resetButtonState,
 } from "./components/modal.js";
-import { setIdOwner } from "./components/storage.js";
-import { enableValidation, clearValidation } from "./components/validation.js";
+import { setIdOwner } from "./utils/storage.js";
+import { enableValidation, clearValidation } from "./utils/validation.js";
 import {
   createDescriptionValues,
   appendInfoString,
@@ -96,6 +96,7 @@ const showInfoCard = (cardId) => {
       const currentCard = cards.find((card) => card["_id"] === cardId);
       const descriptions = createDescriptionValues(currentCard);
       const terms = CardInfo.INFO_CARD_TERMS;
+      if (listInfo.innerText) listInfo.innerText = "";
       titleInfo.textContent = CardInfo.TITLE_INFO_CARD.title;
       subtitleInfo.textContent = CardInfo.TITLE_INFO_CARD.subtitle;
       appendInfoString(listInfo, terms, descriptions);
@@ -104,7 +105,7 @@ const showInfoCard = (cardId) => {
     })
     .catch((err) => {
       console.log(err);
-    });
+    })
 };
 
 export const openConfirmModalWindow = (id, card) => {

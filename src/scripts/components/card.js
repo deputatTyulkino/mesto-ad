@@ -1,8 +1,8 @@
 import { changeLikeCardStatus, deleteCard } from "../api/api";
 import { confirmButton, openConfirmModalWindow } from "../index";
-import { getIdOwner } from "./storage";
+import { getIdOwner } from "../utils/storage";
 import { fetchingButtonState, resetButtonState } from "./modal";
-import { getTemplate } from "./template";
+import { getTemplate } from "../utils/template";
 import { getCountLike } from "../helpers/helpers";
 import { ButtonText } from "../constants/button_text";
 

@@ -1,4 +1,4 @@
-import { getTemplateInfoString, getTemplateUserCardInfo } from "../components/template";
+import { getTemplateInfoString, getTemplateUserCardInfo } from "../utils/template";
 
 export const formatDate = (date) => new Date(date).toLocaleDateString();
 
