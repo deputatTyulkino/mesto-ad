@@ -96,7 +96,7 @@ const showInfoCard = (cardId) => {
       const currentCard = cards.find((card) => card["_id"] === cardId);
       const descriptions = createDescriptionValues(currentCard);
       const terms = CardInfo.INFO_CARD_TERMS;
-      if (listInfo.innerText) listInfo.innerText = "";
+      if (listInfo.textContent) listInfo.textContent = "";
       titleInfo.textContent = CardInfo.TITLE_INFO_CARD.title;
       subtitleInfo.textContent = CardInfo.TITLE_INFO_CARD.subtitle;
       appendInfoString(listInfo, terms, descriptions);
