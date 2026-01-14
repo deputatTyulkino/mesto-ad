@@ -48,16 +48,16 @@ export const createCardElement = (
   cardElement.querySelector(".card__title").textContent = data.name;
   countLike.textContent = getCountLike(data.likes);
 
-  const userLikes = data.likes.map((user) => user["_id"]);
+  const userLikes = data.likes.map((user) => user._id);
   if (userLikes.includes(ownerId)) {
     likeButton.classList.add("card__like-button_is-active");
   }
 
-  infoButton.addEventListener("click", () => onShowInfoCard(data["_id"]));
+  infoButton.addEventListener("click", () => onShowInfoCard(data._id));
 
   likeButton.addEventListener("click", () => {
     likeButton.disabled = true;
-    likeCard(likeButton, data["_id"])
+    likeCard(likeButton, data._id)
       .then((response) => {
         countLike.textContent = getCountLike(response.likes);
       })
@@ -69,9 +69,9 @@ export const createCardElement = (
       });
   });
 
-  if (ownerId === data.owner["_id"]) {
+  if (ownerId === data.owner._id) {
     deleteButton.addEventListener("click", () => {
-      openConfirmModalWindow(data["_id"], cardElement);
+      openConfirmModalWindow(data._id, cardElement);
     });
   } else {
     deleteButton.style.display = "none";

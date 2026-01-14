@@ -27,6 +27,8 @@ import {
   createDescriptionValues,
   appendInfoString,
   appendUserLikes,
+  createCardsDescriptionValues,
+  appendSecInfoString,
 } from "./helpers/helpers.js";
 import { ButtonText } from "./constants/button_text.js";
 
@@ -82,25 +84,49 @@ const confirmModalWindow = document.querySelector(".popup_type_remove-card");
 export const confirmButton = confirmModalWindow.querySelector(".popup__button");
 
 const cardInfoModalWindow = document.querySelector(".popup_type_info");
-const cardInfoWrapper = cardInfoModalWindow.querySelector(
-  ".popup__content_content_info",
-);
-const titleInfo = cardInfoModalWindow.querySelector(".popup__title");
+const titleModal = cardInfoModalWindow.querySelector(".popup__title");
 const listInfo = cardInfoModalWindow.querySelector(".popup__info");
-const subtitleInfo = cardInfoModalWindow.querySelector(".popup__text");
-const userLikesList = cardInfoModalWindow.querySelector(".popup__list");
+const subtitleModal = cardInfoModalWindow.querySelector(".popup__text");
+const secondaryListInfo = cardInfoModalWindow.querySelector(".popup__list");
+
+const headerLogo = document.querySelector(".header__logo");
+
+const showAllCardsInfo = () => {
+  getCardList()
+    .then((cards) => {
+      const description = createCardsDescriptionValues(cards)
+      const terms = CardInfo.CARDS_STATISTICS_TERMS;
+      if (listInfo.textContent || secondaryListInfo.textContent) {
+        listInfo.textContent = ""
+        secondaryListInfo.textContent = ""
+        titleModal.textContent = ""
+        subtitleModal.textContent = ""
+      }
+      titleModal.textContent = CardInfo.CARDS_STATISTICS.title
+      subtitleModal.textContent = CardInfo.CARDS_STATISTICS.subtitle
+      appendInfoString(listInfo, terms, description)
+      appendSecInfoString(secondaryListInfo, cards)
+      openModalWindow(cardInfoModalWindow)
+    })
+    .catch((err) => console.log(err))
+}
 
 const showInfoCard = (cardId) => {
   getCardList()
     .then((cards) => {
-      const currentCard = cards.find((card) => card["_id"] === cardId);
+      const currentCard = cards.find((card) => card._id === cardId);
       const descriptions = createDescriptionValues(currentCard);
       const terms = CardInfo.INFO_CARD_TERMS;
-      if (listInfo.textContent) listInfo.textContent = "";
-      titleInfo.textContent = CardInfo.TITLE_INFO_CARD.title;
-      subtitleInfo.textContent = CardInfo.TITLE_INFO_CARD.subtitle;
+      if (listInfo.textContent || secondaryListInfo.textContent) {
+        listInfo.textContent = ""
+        secondaryListInfo.textContent = ""
+        titleModal.textContent = ""
+        subtitleModal.textContent = ""
+      }
+      titleModal.textContent = CardInfo.INFO_CARD.title;
+      subtitleModal.textContent = CardInfo.INFO_CARD.subtitle;
       appendInfoString(listInfo, terms, descriptions);
-      appendUserLikes(userLikesList, currentCard.likes);
+      appendUserLikes(secondaryListInfo, currentCard.likes);
       openModalWindow(cardInfoModalWindow);
     })
     .catch((err) => {
@@ -144,7 +170,7 @@ const handleProfileFormSubmit = (evt) => {
     });
 };
 
-const handleAvatarFromSubmit = (evt) => {
+const handleAvatarFormSubmit = (evt) => {
   evt.preventDefault();
   const avatarUrl = evt.target["user-avatar"].value.trim();
   fetchingButtonState(editAvatarButton, ButtonText.FETCH_BUTTON_SAVE_TEXT);
@@ -168,12 +194,11 @@ const handleCardFormSubmit = (evt) => {
   fetchingButtonState(cardButton, ButtonText.FETCH_BUTTON_CREATE_TEXT);
   addCard({ name, link })
     .then((card) => {
-      placesWrap.prepend(
-        createCardElement(card, {
-          onPreviewPicture: handlePreviewPicture,
-          onShowInfoCard: showInfoCard,
-        }),
-      );
+      const cardElement = createCardElement(card, {
+        onPreviewPicture: handlePreviewPicture,
+        onShowInfoCard: showInfoCard,
+      })
+      placesWrap.prepend(cardElement);
       closeModalWindow(cardFormModalWindow);
     })
     .catch((err) => {
@@ -187,7 +212,8 @@ const handleCardFormSubmit = (evt) => {
 // EventListeners
 profileForm.addEventListener("submit", handleProfileFormSubmit);
 cardForm.addEventListener("submit", handleCardFormSubmit);
-avatarForm.addEventListener("submit", handleAvatarFromSubmit);
+avatarForm.addEventListener("submit", handleAvatarFormSubmit);
+headerLogo.addEventListener('click', showAllCardsInfo)
 
 openProfileFormButton.addEventListener("click", () => {
   profileTitleInput.value = profileTitle.textContent;
@@ -229,7 +255,7 @@ const setProfile = (data) => {
   profileAvatar.style.backgroundImage = `url(${data.avatar})`;
   profileTitle.textContent = data.name;
   profileDescription.textContent = data.about;
-  setIdOwner(data["_id"]);
+  setIdOwner(data._id);
 };
 
 Promise.all([getCardList(), getUserInfo()])

@@ -1,5 +1,5 @@
 export class CardInfo {
-  static TITLE_INFO_CARD = {
+  static INFO_CARD = {
     title: "Информация о карточке",
     subtitle: "Лайкнули:",
   }
@@ -11,7 +11,12 @@ export class CardInfo {
     name: "Описание:",
   }
 
-  static CARDS_INFO_TERMS = {
+  static CARDS_STATISTICS = {
+    title: 'Статистика карточек',
+    subtitle: 'Популярные карточки:'
+  }
+
+  static CARDS_STATISTICS_TERMS = {
     countUsers: "Всего пользователей:",
     countLikes: "Всего лайков:",
     maxLikesOnlyUser: "Максимально лайков от одного:",
