@@ -13,7 +13,7 @@ import {
   setAvatar,
   addCard,
 } from "./api/api.js";
-import { createCardElement, removeCard } from "./components/card.js";
+import { createCardElement } from "./components/card.js";
 import {
   openModalWindow,
   closeModalWindow,
@@ -24,12 +24,9 @@ import {
 import { setIdOwner } from "./utils/storage.js";
 import { enableValidation, clearValidation } from "./utils/validation.js";
 import {
-  createDescriptionValues,
-  appendInfoString,
-  appendUserLikes,
-  createCardsDescriptionValues,
-  appendSecInfoString,
-} from "./helpers/helpers.js";
+  ModalDescriptionContent,
+  ModalContent,
+} from "./helpers/modal_content.js"
 import { ButtonText } from "./constants/button_text.js";
 
 import { CardInfo } from "./constants/card_info.js";
@@ -80,9 +77,6 @@ const avatarFormModalWindow = document.querySelector(".popup_type_edit-avatar");
 const avatarForm = avatarFormModalWindow.querySelector(".popup__form");
 const editAvatarButton = avatarFormModalWindow.querySelector(".popup__button");
 
-const confirmModalWindow = document.querySelector(".popup_type_remove-card");
-export const confirmButton = confirmModalWindow.querySelector(".popup__button");
-
 const cardInfoModalWindow = document.querySelector(".popup_type_info");
 const titleModal = cardInfoModalWindow.querySelector(".popup__title");
 const listInfo = cardInfoModalWindow.querySelector(".popup__info");
@@ -94,7 +88,7 @@ const headerLogo = document.querySelector(".header__logo");
 const showAllCardsInfo = () => {
   getCardList()
     .then((cards) => {
-      const description = createCardsDescriptionValues(cards)
+      const description = ModalDescriptionContent.createCardsDescriptionValues(cards)
       const terms = CardInfo.CARDS_STATISTICS_TERMS;
       if (listInfo.textContent || secondaryListInfo.textContent) {
         listInfo.textContent = ""
@@ -104,8 +98,8 @@ const showAllCardsInfo = () => {
       }
       titleModal.textContent = CardInfo.CARDS_STATISTICS.title
       subtitleModal.textContent = CardInfo.CARDS_STATISTICS.subtitle
-      appendInfoString(listInfo, terms, description)
-      appendSecInfoString(secondaryListInfo, cards)
+      ModalContent.appendInfoString(listInfo, terms, description)
+      ModalContent.appendSecInfoString(secondaryListInfo, cards)
       openModalWindow(cardInfoModalWindow)
     })
     .catch((err) => console.log(err))
@@ -115,7 +109,7 @@ const showInfoCard = (cardId) => {
   getCardList()
     .then((cards) => {
       const currentCard = cards.find((card) => card._id === cardId);
-      const descriptions = createDescriptionValues(currentCard);
+      const descriptions = ModalDescriptionContent.createDescriptionValues(currentCard);
       const terms = CardInfo.INFO_CARD_TERMS;
       if (listInfo.textContent || secondaryListInfo.textContent) {
         listInfo.textContent = ""
@@ -125,22 +119,13 @@ const showInfoCard = (cardId) => {
       }
       titleModal.textContent = CardInfo.INFO_CARD.title;
       subtitleModal.textContent = CardInfo.INFO_CARD.subtitle;
-      appendInfoString(listInfo, terms, descriptions);
-      appendUserLikes(secondaryListInfo, currentCard.likes);
+      ModalContent.appendInfoString(listInfo, terms, descriptions);
+      ModalContent.appendUserLikes(secondaryListInfo, currentCard.likes);
       openModalWindow(cardInfoModalWindow);
     })
     .catch((err) => {
       console.log(err);
     })
-};
-
-export const openConfirmModalWindow = (id, card) => {
-  openModalWindow(confirmModalWindow);
-  confirmButton.addEventListener("click", (evt) => {
-    evt.preventDefault();
-    removeCard(id, card);
-    closeModalWindow(confirmModalWindow);
-  });
 };
 
 const handlePreviewPicture = ({ name, link }) => {

@@ -1,3 +1,5 @@
+import { removeCard } from "./card";
+
 const handleEscUp = (evt) => {
   if (evt.key === "Escape") {
     const activePopup = document.querySelector(".popup_is-opened");
@@ -27,6 +29,15 @@ export const closeModalWindow = (modalWindow) => {
   modalWindow.classList.remove("popup_is-opened");
   document.body.style.overflow = "";
   document.removeEventListener("keyup", handleEscUp);
+};
+
+export const openConfirmModalWindow = (id, card, confirmModalWindow, confirmButton) => {
+  openModalWindow(confirmModalWindow);
+  confirmButton.addEventListener("click", (evt) => {
+    evt.preventDefault();
+    removeCard(id, card, confirmButton);
+    closeModalWindow(confirmModalWindow);
+  });
 };
 
 export const setCloseModalWindowEventListeners = (modalWindow) => {

@@ -1,9 +1,9 @@
 import { changeLikeCardStatus, deleteCard } from "../api/api";
-import { confirmButton, openConfirmModalWindow } from "../index";
+import { openConfirmModalWindow } from "./modal";
 import { getIdOwner } from "../utils/storage";
 import { fetchingButtonState, resetButtonState } from "./modal";
-import { getTemplate } from "../utils/template";
-import { getCountLike } from "../helpers/helpers";
+import { getTemplate } from "../helpers/template";
+import { CardInfo } from "../helpers/modal_inf";
 import { ButtonText } from "../constants/button_text";
 
 const likeCard = (likeButton, id) => {
@@ -12,7 +12,7 @@ const likeCard = (likeButton, id) => {
   return changeLikeCardStatus(id, isLiked);
 };
 
-export const removeCard = (id, cardElement) => {
+export const removeCard = (id, cardElement, confirmButton) => {
   fetchingButtonState(confirmButton, ButtonText.FETCH_BUTTON_REMOVE_TEXT);
   deleteCard(id)
     .then((response) => {
@@ -31,6 +31,8 @@ export const createCardElement = (
   data,
   { onPreviewPicture, onShowInfoCard },
 ) => {
+  const confirmModalWindow = document.querySelector(".popup_type_remove-card");
+  const confirmButton = confirmModalWindow.querySelector(".popup__button");
   const ownerId = getIdOwner();
   const cardElement = getTemplate();
   const likeButton = cardElement.querySelector(".card__like-button");
@@ -46,7 +48,7 @@ export const createCardElement = (
   cardImage.src = data.link;
   cardImage.alt = data.name;
   cardElement.querySelector(".card__title").textContent = data.name;
-  countLike.textContent = getCountLike(data.likes);
+  countLike.textContent = CardInfo.getCountLike(data.likes);
 
   const userLikes = data.likes.map((user) => user._id);
   if (userLikes.includes(ownerId)) {
@@ -59,7 +61,7 @@ export const createCardElement = (
     likeButton.disabled = true;
     likeCard(likeButton, data._id)
       .then((response) => {
-        countLike.textContent = getCountLike(response.likes);
+        countLike.textContent = CardInfo.getCountLike(response.likes);
       })
       .catch((err) => {
         console.log(err);
@@ -71,7 +73,7 @@ export const createCardElement = (
 
   if (ownerId === data.owner._id) {
     deleteButton.addEventListener("click", () => {
-      openConfirmModalWindow(data._id, cardElement);
+      openConfirmModalWindow(data._id, cardElement, confirmModalWindow, confirmButton);
     });
   } else {
     deleteButton.style.display = "none";
